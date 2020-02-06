@@ -1,4 +1,4 @@
-package com.blogspotjavastarterpromo.rest_tutorial;
+package com.blogspotjavastarterpromo.rest_tutorial.hello;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

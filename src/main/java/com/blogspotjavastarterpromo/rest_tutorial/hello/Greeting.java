@@ -1,4 +1,4 @@
-package com.blogspotjavastarterpromo.rest_tutorial;
+package com.blogspotjavastarterpromo.rest_tutorial.hello;
 
 public class Greeting {
     private String msg;
