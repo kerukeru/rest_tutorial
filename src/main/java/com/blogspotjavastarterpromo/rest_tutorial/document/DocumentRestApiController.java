@@ -14,20 +14,39 @@ public class DocumentRestApiController {
 
     private Collection<Document> documents = new ArrayList<>();
 
+    @PatchMapping("/{number}")
+    public void updateDocument(@PathVariable long number,
+                               @RequestBody Document newPartialDoc){
+        findDocByNumber(number).ifPresent(doc ->{
+            if(newPartialDoc.getTitle() != null)
+                doc.setTitle(newPartialDoc.getTitle());
+            if(newPartialDoc.getTags() != null)
+                doc.setTags(newPartialDoc.getTags());
+        });
+    }
+
+    @PutMapping("/{number}")
+    public void replaceDocument(@PathVariable long number,
+                                @RequestBody Document newDocument){
+        findDocByNumber(number).ifPresent(document -> {
+            document.setTitle(newDocument.getTitle());
+            document.setTags(newDocument.getTags());
+        });
+    }
+
     @GetMapping
     public Iterable<Document> getDocuments(){
         return documents;
     }
 
-    @GetMapping("/{number}")
-    public Optional<Document> getDocument(@PathVariable long number){
-        return documents.stream().filter(doc -> doc.getNumber()==number).findAny();
-    }
-
     @GetMapping("/{number}/title")
     public Optional<String> getTitle(@PathVariable long number){
-        return documents.stream().filter(doc -> doc.getNumber()==number)
-                .findAny().map(Document::getTitle);
+        return findDocByNumber(number).map(Document::getTitle);
+    }
+
+    @GetMapping("/{number}")
+    public Optional<Document> getDocument(@PathVariable long number){
+        return findDocByNumber(number);
     }
 
     @PostMapping
@@ -40,6 +59,11 @@ public class DocumentRestApiController {
         documents.stream()
                 .filter(document -> document.getNumber() == docNumber)
                 .findAny().ifPresent(document -> document.getTags().add(tag));
-
     }
+
+    private Optional<Document> findDocByNumber(long number){
+        return documents.stream().filter(doc -> doc.getNumber()==number)
+                .findAny();
+    }
+
 }
